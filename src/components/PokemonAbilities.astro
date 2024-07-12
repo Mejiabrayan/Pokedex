@@ -1,0 +1,21 @@
+---
+import type { PokemonAbility } from '../types/pokemon';
+
+interface Props {
+  abilities: PokemonAbility[];
+}
+
+const { abilities } = Astro.props;
+---
+
+<div class="mt-6">
+  <h2 class="text-xl font-semibold mb-2">Abilities</h2>
+  <ul class="list-disc list-inside">
+    {abilities.map((ability) => (
+      <li class="capitalize">
+        {ability.ability.name}
+        {ability.is_hidden && <span class="text-sm text-gray-500 ml-2">(Hidden Ability)</span>}
+      </li>
+    ))}
+  </ul>
+</div>

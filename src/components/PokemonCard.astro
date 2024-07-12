@@ -1,0 +1,33 @@
+---
+import type { Pokemon } from '../types/pokemon';
+
+interface Props {
+  pokemon: Pokemon;
+}
+
+const { pokemon } = Astro.props;
+---
+
+<a href={`/pokemon/${pokemon.id}`} class="block">
+  <div class="bg-white shadow-md rounded-lg p-4 transition-transform hover:scale-105">
+    <img 
+      src={pokemon.sprites.front_default} 
+      alt={pokemon.name} 
+      class="mx-auto" 
+      transition:name={`pokemon-image-${pokemon.id}`}
+    />
+    <h2 
+      class="text-xl font-semibold mt-2 capitalize" 
+      transition:name={`pokemon-name-${pokemon.id}`}
+    >
+      {pokemon.name}
+    </h2>
+    <div class="flex gap-2 mt-2">
+      {pokemon.types.map((type) => (
+        <span class="px-2 py-1 bg-gray-200 rounded-full text-sm capitalize">
+          {type.type.name}
+        </span>
+      ))}
+    </div>
+  </div>
+</a>

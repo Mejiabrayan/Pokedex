@@ -1,0 +1,41 @@
+---
+import type { PokemonStat } from '../types/pokemon';
+
+interface Props {
+  stats: PokemonStat[];
+}
+
+const { stats } = Astro.props;
+
+const getStatColor = (statName: string) => {
+  const colors: { [key: string]: string } = {
+    hp: 'bg-red-500',
+    attack: 'bg-orange-500',
+    defense: 'bg-yellow-500',
+    'special-attack': 'bg-blue-500',
+    'special-defense': 'bg-green-500',
+    speed: 'bg-pink-500'
+  };
+  return colors[statName] || 'bg-gray-500';
+};
+---
+
+<div class="mt-6">
+  <h2 class="text-xl font-semibold mb-2">Stats</h2>
+  <div class="space-y-2">
+    {stats.map((stat) => (
+      <div>
+        <div class="flex justify-between text-sm">
+          <span class="capitalize">{stat.stat.name}</span>
+          <span>{stat.base_stat}</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div
+            class={`h-2.5 rounded-full ${getStatColor(stat.stat.name)}`}
+            style={`width: ${(stat.base_stat / 255) * 100}%`}
+          ></div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
