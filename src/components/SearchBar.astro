@@ -1,0 +1,74 @@
+---
+import type { PokemonListItem } from '../types/pokemon';
+import { searchPokemon } from '../lib/pokemonApi';
+
+let initialSearchResults: PokemonListItem[] = [];
+let query = '';
+
+if (Astro.request.method === 'GET') {
+  const url = new URL(Astro.request.url);
+  query = url.searchParams.get('query') || '';
+  if (query.trim()) {
+    initialSearchResults = await searchPokemon(query);
+  }
+}
+---
+
+<div class="mb-4">
+  <input
+    type="text"
+    id="searchInput"
+    name="query"
+    value={query}
+    placeholder="Search Pokémon"
+    class="w-full p-2 border rounded"
+  />
+  <ul id="searchResults" class="mt-2 mb-4"></ul>
+</div>
+
+<script>
+  import type { PokemonListItem } from '../types/pokemon';
+  import { searchPokemon } from '../lib/pokemonApi';
+
+  const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+  const searchResults = document.getElementById('searchResults') as HTMLUListElement;
+
+  function debounce<F extends (...args: any[]) => any>(func: F, wait: number): (...args: Parameters<F>) => void {
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+    return (...args: Parameters<F>) => {
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  }
+
+  async function performSearch(query: string) {
+    if (query.trim()) {
+      try {
+        const results = await searchPokemon(query);
+        displayResults(results);
+      } catch (error) {
+        console.error('Error searching for Pokémon:', error);
+      }
+    } else {
+      searchResults.innerHTML = '';
+    }
+  }
+
+  function displayResults(results: PokemonListItem[]) {
+    searchResults.innerHTML = results.map(pokemon => `
+      <li class="p-2 hover:bg-gray-100">
+        <a href="/pokemon/${pokemon.name}">${pokemon.name}</a>
+      </li>
+    `).join('');
+  }
+
+  const debouncedSearch = debounce(performSearch, 300);
+
+  searchInput.addEventListener('input', (e) => {
+    const query = (e.target as HTMLInputElement).value;
+    debouncedSearch(query);
+  });
+
+  // Initialize with any server-side results
+  displayResults(JSON.parse('{initialSearchResults}'));
+</script>

@@ -1,6 +1,7 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
 import '../app.css';
+import ThemeIcon from '../components/ThemeIcon.astro';
 interface Props {
   title: string;
 }
@@ -20,6 +21,9 @@ const { title } = Astro.props;
     <ViewTransitions />
   </head>
   <body>
+
+      <!-- <ThemeIcon /> -->
+
     <slot />
   </body>
 </html>

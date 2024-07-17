@@ -1,3 +1,14 @@
+@import 'tailwindcss';
 
-@import "tailwindcss";
+@theme {
+  --color-pokedex-color: oklch(88.08% 0.172 90.57);
+}
 
+html.dark {
+  background-color: black;
+  color: #fff;
+}
+
+.dark .nav-links a {
+  color: #000;
+}
